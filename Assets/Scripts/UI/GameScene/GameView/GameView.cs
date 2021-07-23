@@ -12,17 +12,22 @@ namespace UI.GameScene.GameView
         [SerializeField] private GridLayoutGroup gridLayout;
         [SerializeField] private GameObject cellPrefab;
         [SerializeField] private GameObject gridSeparatorPrefab;
+        [SerializeField] private Transform separatorHolder;
 
-        private List<Cell> _cachedCells = new List<Cell>();
+        private readonly List<Cell> _cachedCells = new List<Cell>();
+        private readonly List<GameObject> _cachedGridSeparators = new List<GameObject>();
 
 
         private void Start()
         {
-            CacheGridCells();
+            var gridRectTr = gameView.GetComponent<RectTransform>();
+            var cellSize = CalculateCellSize(gridRectTr);
+            CacheGridCells(cellSize);
+            SetUpGridView(cellSize, gridRectTr.sizeDelta.x);
         }
 
 
-        private float CalculateCellSize()
+        private float CalculateCellSize(RectTransform gridRectTr)
         {
             if (!gameView)
             {
@@ -30,28 +35,21 @@ namespace UI.GameScene.GameView
             }
             
             float size = 0;
-            var gridRectTr = gameView.GetComponent<RectTransform>();
             size = (gridRectTr.rect.width / GameManager.Instance.GridSize) - gridLayout.spacing.x;
             return size;
         }
 
 
-        private void CacheGridCells()
+        private void CacheGridCells(float cellSize)
         {
-            var cellSize = CalculateCellSize();
-
             if (cellSize == 0)
             {
                 return;
             }
 
-            var cellSizeVector2 = new Vector2(cellSize, cellSize);
-            cellPrefab.GetComponent<RectTransform>().sizeDelta = cellSizeVector2;
-            gridLayout.cellSize = cellSizeVector2;
-            
-            var count = GameManager.Instance.GridSize * GameManager.Instance.GridSize;
+            var gameCellCount = GameManager.Instance.GridSize * GameManager.Instance.GridSize;
             var cachedCellCount = _cachedCells.Count;
-            for (int i = 0; i < count - cachedCellCount; i++)
+            for (int i = 0; i < gameCellCount - cachedCellCount; i++)
             {
                 var cellGo = Instantiate(cellPrefab, gridLayout.transform);
                 _cachedCells.Add(cellGo.GetComponent<Cell>());
@@ -59,13 +57,60 @@ namespace UI.GameScene.GameView
         }
 
 
-        private void SetUpGridView(float cellSize)
+        private void SetUpGridView(float cellSize, float gridRectSize)
         {
             if (_cachedCells == null || _cachedCells.Count == 0)
             {
                 return;
             }
+
+            var cellSizeVector2 = new Vector2(cellSize, cellSize);
+            var gameCellCount = GameManager.Instance.GridSize * GameManager.Instance.GridSize;
+            for (int i = 0; i < _cachedCells.Count; i++)
+            {
+                _cachedCells[i].gameObject.SetActive(i < gameCellCount);
+                _cachedCells[i].GetComponent<RectTransform>().sizeDelta = cellSizeVector2;
+                gridLayout.cellSize = cellSizeVector2;
+            }
             
+            SetUpGridSeparators(cellSize, gridRectSize);
+        }
+
+
+        private void SetUpGridSeparators(float cellSize, float gridRectSize)
+        {
+            var separatorCount = (GameManager.Instance.GridSize - 1) * 2;
+            var cachedSeparatorCount = _cachedGridSeparators.Count;
+
+            var gridSeparatorRectTr = gridSeparatorPrefab.GetComponent<RectTransform>();
+            gridSeparatorRectTr.sizeDelta = new Vector2(gridRectSize, gridSeparatorRectTr.rect.height);
+            
+            for (int i = 0; i < separatorCount - cachedSeparatorCount; i++)
+            {
+                _cachedGridSeparators.Add(Instantiate(gridSeparatorPrefab, separatorHolder));
+            }
+
+            for (int i = 0; i < _cachedGridSeparators.Count; i++)
+            {
+                _cachedGridSeparators[i].SetActive(i < separatorCount);
+                if (i < separatorCount / 2)
+                {
+                    _cachedGridSeparators[i].transform.localPosition = new Vector3(
+                        0,
+                        ((cellSize + gridLayout.spacing.y) * (i + 1) + gridLayout.spacing.y / 2) * (-1),
+                        0
+                    );
+                }
+                else
+                {
+                    _cachedGridSeparators[i].transform.localPosition = new Vector3(
+                        ((cellSize + gridLayout.spacing.y) * (i - separatorCount / 2 + 1) + gridLayout.spacing.y / 2),
+                        gridRectSize * (-1),
+                        0
+                    );
+                    _cachedGridSeparators[i].transform.rotation = Quaternion.Euler(0, 0, 90);
+                }
+            }
         }
     }
 }
