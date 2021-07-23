@@ -35,6 +35,6 @@ namespace Logic.Managers
             return managerHolder;
         }
 
-        public abstract void Init();
+        public abstract void Initialize();
     }
 }

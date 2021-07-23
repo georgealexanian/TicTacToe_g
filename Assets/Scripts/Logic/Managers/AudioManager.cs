@@ -4,7 +4,7 @@ namespace Logic.Managers
 {
     public class AudioManager : BaseManager<AudioManager>
     {
-        public override void Init()
+        public override void Initialize()
         {
             
         }

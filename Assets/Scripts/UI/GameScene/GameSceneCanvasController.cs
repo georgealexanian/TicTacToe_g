@@ -8,7 +8,7 @@ namespace UI.GameScene
     {
         private void Awake()
         {
-            AudioManager.Instance.Init();
+            
         }
     }
 }

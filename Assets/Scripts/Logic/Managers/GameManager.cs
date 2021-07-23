@@ -4,7 +4,10 @@ namespace Logic.Managers
 {
     public class GameManager : BaseManager<GameManager>
     {
-        public override void Init()
+        public int GridSize { get; set; } = 3;
+        
+        
+        public override void Initialize()
         {
             
         }

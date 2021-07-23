@@ -8,8 +8,8 @@ namespace GameInit
     {
         private void Awake()
         {
-            GameManager.Instance.Init();
-            AudioManager.Instance.Init();
+            GameManager.Instance.Initialize();
+            AudioManager.Instance.Initialize();
 
             SceneManager.LoadScene(Scenes.GameScene.ToString());
         }
