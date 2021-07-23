@@ -6,9 +6,10 @@ namespace UI.GameScene
 {
     public class GameSceneCanvasController : MonoBehaviour
     {
-        private void Awake()
+        [SerializeField] private GameObject settingsWindow;
+        public void SettingsButton()
         {
-            
+            settingsWindow.SetActive(true);
         }
     }
 }

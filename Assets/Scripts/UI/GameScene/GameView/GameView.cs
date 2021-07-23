@@ -97,14 +97,14 @@ namespace UI.GameScene.GameView
                 {
                     _cachedGridSeparators[i].transform.localPosition = new Vector3(
                         0,
-                        ((cellSize + gridLayout.spacing.y) * (i + 1) + gridLayout.spacing.y / 2) * (-1),
+                        ((cellSize + gridLayout.spacing.y) * (i + 1) + gridLayout.spacing.y * 2) * (-1),
                         0
                     );
                 }
                 else
                 {
                     _cachedGridSeparators[i].transform.localPosition = new Vector3(
-                        ((cellSize + gridLayout.spacing.y) * (i - separatorCount / 2 + 1) + gridLayout.spacing.y / 2),
+                        ((cellSize + gridLayout.spacing.y) * (i - separatorCount / 2 + 1) + gridLayout.spacing.y * 2),
                         gridRectSize * (-1),
                         0
                     );

@@ -23,7 +23,7 @@ SpriteAtlas:
     platformSettings:
     - serializedVersion: 3
       m_BuildTarget: Android
-      m_MaxTextureSize: 512
+      m_MaxTextureSize: 2048
       m_ResizeAlgorithm: 0
       m_TextureFormat: 51
       m_TextureCompression: 1
@@ -35,7 +35,7 @@ SpriteAtlas:
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     - serializedVersion: 3
       m_BuildTarget: iPhone
-      m_MaxTextureSize: 1024
+      m_MaxTextureSize: 2048
       m_ResizeAlgorithm: 0
       m_TextureFormat: 51
       m_TextureCompression: 1
@@ -47,11 +47,11 @@ SpriteAtlas:
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
       serializedVersion: 2
-      padding: 4
+      padding: 8
       blockOffset: 1
       allowAlphaSplitting: 0
-      enableRotation: 1
-      enableTightPacking: 1
+      enableRotation: 0
+      enableTightPacking: 0
     secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
@@ -59,7 +59,9 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 371d1598194254bb594650c32128dc1b, type: 3}
     - {fileID: 2800000, guid: bd30ced15dd1c4a81a8798331e1abe4a, type: 3}
     - {fileID: 2800000, guid: 5e8278e012ff04d9a8bbd92350645568, type: 3}
-    totalSpriteSurfaceArea: 510088
+    - {fileID: 2800000, guid: 1f26d9757d32d487dab701c660e3ba24, type: 3}
+    - {fileID: 2800000, guid: d122190aeb64847fdb5770672b788601, type: 3}
+    totalSpriteSurfaceArea: 1034376
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -68,12 +70,16 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 5e8278e012ff04d9a8bbd92350645568, type: 3}
   - {fileID: 21300000, guid: 2c0ff12133b094a6a9a294d3efc2eb76, type: 3}
   - {fileID: 21300000, guid: bd30ced15dd1c4a81a8798331e1abe4a, type: 3}
+  - {fileID: 21300000, guid: 1f26d9757d32d487dab701c660e3ba24, type: 3}
   - {fileID: 21300000, guid: 371d1598194254bb594650c32128dc1b, type: 3}
+  - {fileID: 21300000, guid: d122190aeb64847fdb5770672b788601, type: 3}
   m_PackedSpriteNamesToIndex:
   - ExTarget
   - Line
   - CircleTarget
+  - SettingsIcon
   - Background
+  - CloseButton
   m_RenderDataMap: {}
   m_Tag: Pack1Atlas
   m_IsVariant: 0
