@@ -26,6 +26,7 @@ namespace UI.GameScene.Windows.SettingsWindow
             
             SetUpGameSizeInfo();
             SetUpOpponentTypeDropdown();
+            SetUpDifficultyLevelToggles();
         }
 
 
@@ -49,12 +50,14 @@ namespace UI.GameScene.Windows.SettingsWindow
 
             foreach (var opponentType in Enum.GetValues(typeof(GameStates.OpponentType)))
             {
-                if (opponentType.ToString() != "Unknown")
+                if (opponentType.ToString().Equals("Unknown"))
                 {
-                    var option = new TMP_Dropdown.OptionData();
-                    option.text = opponentType.ToString();
-                    options.Add(option);
+                    continue;
                 }
+                
+                var option = new TMP_Dropdown.OptionData();
+                option.text = opponentType.ToString();
+                options.Add(option);
             }
             
             opponentTypeDropDown.AddOptions(options);
@@ -83,6 +86,25 @@ namespace UI.GameScene.Windows.SettingsWindow
             var optionTextValue = dropdown.options[dropdown.value].text;
             Enum.TryParse(optionTextValue, out GameStates.OpponentType opponentType);
             GameManager.Instance.OpponentType = opponentType;
+        }
+
+
+        private void SetUpDifficultyLevelToggles()
+        {
+            if (toggleGroup.transform.childCount == 0)
+            {
+                foreach (var difficultyLevel in Enum.GetValues(typeof(GameStates.DifficultyLevel)))
+                {
+                    if (difficultyLevel.ToString().Equals("Unknown"))
+                    {
+                        continue;
+                    }
+                    
+                    var toggleGo = Instantiate(togglePrefab, toggleGroup.transform);
+                    Enum.TryParse(difficultyLevel.ToString(), out GameStates.DifficultyLevel diffLevel);
+                    toggleGo.GetComponent<DifficultyToggle>().Initialize(diffLevel, toggleGroup);
+                }
+            }
         }
     }
 }

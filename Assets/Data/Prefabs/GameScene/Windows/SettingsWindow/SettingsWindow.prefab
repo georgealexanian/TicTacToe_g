@@ -205,8 +205,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -53.689}
-  m_SizeDelta: {x: 613.04297, y: 72.3465}
+  m_AnchoredPosition: {x: 7.9382, y: -53.689}
+  m_SizeDelta: {x: 990.1068, y: 72.3465}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5103894537362947068
 MonoBehaviour:
@@ -506,8 +506,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -29.200012}
-  m_SizeDelta: {x: 0, y: 173.88}
+  m_AnchoredPosition: {x: 0, y: -69.004974}
+  m_SizeDelta: {x: 0, y: 195.79}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3443544691151217003
 MonoBehaviour:
@@ -752,8 +752,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0016098, y: 84.484}
-  m_SizeDelta: {x: 624.92, y: 50}
+  m_AnchoredPosition: {x: 0, y: 73.748}
+  m_SizeDelta: {x: 780.5927, y: 71.4721}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8596864662265867437
 CanvasRenderer:
@@ -810,13 +810,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 57.7
-  m_fontSizeBase: 57.7
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1192,8 +1192,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -298.661}
-  m_SizeDelta: {x: 0, y: 230.3621}
+  m_AnchoredPosition: {x: 0, y: -198}
+  m_SizeDelta: {x: 0, y: 333.804}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4886484643751899445
 GameObject:
@@ -1362,13 +1362,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 70
-  m_fontSizeBase: 70
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1501,8 +1501,8 @@ MonoBehaviour:
   gameSize: {fileID: 5617009491286953526}
   gameSizeSlider: {fileID: 5103894537362947068}
   opponentTypeDropDown: {fileID: 5136235387053779455}
-  toggleGroup: {fileID: 0}
-  togglePrefab: {fileID: 0}
+  toggleGroup: {fileID: 3443544691151217003}
+  togglePrefab: {fileID: 7801691150338406888, guid: 5388434fcb92443a1a7c0b2dbbcb34c1, type: 3}
 --- !u!223 &5072355405269348610
 Canvas:
   m_ObjectHideFlags: 0
@@ -2027,7 +2027,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -74}
+  m_AnchoredPosition: {x: 0, y: 163}
   m_SizeDelta: {x: 0, y: 218.9678}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7652206129002992125
@@ -2155,7 +2155,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 144.97}
+  m_AnchoredPosition: {x: 0, y: 465}
   m_SizeDelta: {x: 0, y: 218.9678}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8201397721664900250
@@ -2192,8 +2192,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0000076293945, y: 83.217}
-  m_SizeDelta: {x: 672, y: 50.955}
+  m_AnchoredPosition: {x: 0.000027657, y: 100}
+  m_SizeDelta: {x: 1042.3939, y: 74.2165}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2496289377482407204
 CanvasRenderer:
@@ -2250,13 +2250,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 45
-  m_fontSizeBase: 45
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
