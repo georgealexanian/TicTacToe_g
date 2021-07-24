@@ -14,7 +14,7 @@ namespace UI.GameScene.GameView
         [SerializeField] private GameObject gridSeparatorPrefab;
         [SerializeField] private Transform separatorHolder;
 
-        private readonly List<Cell> _cachedCells = new List<Cell>();
+        private readonly List<BoardCell> _cachedCells = new List<BoardCell>();
         private readonly List<GameObject> _cachedGridSeparators = new List<GameObject>();
 
 
@@ -52,7 +52,7 @@ namespace UI.GameScene.GameView
             for (int i = 0; i < gameCellCount - cachedCellCount; i++)
             {
                 var cellGo = Instantiate(cellPrefab, gridLayout.transform);
-                _cachedCells.Add(cellGo.GetComponent<Cell>());
+                _cachedCells.Add(cellGo.GetComponent<BoardCell>());
             }
         }
 
@@ -69,6 +69,7 @@ namespace UI.GameScene.GameView
             for (int i = 0; i < _cachedCells.Count; i++)
             {
                 _cachedCells[i].gameObject.SetActive(i < gameCellCount);
+                _cachedCells[i].GetComponent<Button>().interactable = true;
                 _cachedCells[i].GetComponent<RectTransform>().sizeDelta = cellSizeVector2;
                 gridLayout.cellSize = cellSizeVector2;
             }

@@ -48,7 +48,7 @@ namespace UI.GameScene.Windows.SettingsWindow
             opponentTypeDropDown.ClearOptions();
             var options = new List<TMP_Dropdown.OptionData>();
 
-            foreach (var opponentType in Enum.GetValues(typeof(GameStates.OpponentType)))
+            foreach (var opponentType in Enum.GetValues(typeof(OpponentType)))
             {
                 if (opponentType.ToString().Equals("Unknown"))
                 {
@@ -84,7 +84,7 @@ namespace UI.GameScene.Windows.SettingsWindow
         private void OnDropdownValueChanged(TMP_Dropdown dropdown)
         {
             var optionTextValue = dropdown.options[dropdown.value].text;
-            Enum.TryParse(optionTextValue, out GameStates.OpponentType opponentType);
+            Enum.TryParse(optionTextValue, out OpponentType opponentType);
             GameManager.Instance.OpponentType = opponentType;
         }
 
@@ -93,7 +93,7 @@ namespace UI.GameScene.Windows.SettingsWindow
         {
             if (toggleGroup.transform.childCount == 0)
             {
-                foreach (var difficultyLevel in Enum.GetValues(typeof(GameStates.DifficultyLevel)))
+                foreach (var difficultyLevel in Enum.GetValues(typeof(DifficultyLevel)))
                 {
                     if (difficultyLevel.ToString().Equals("Unknown"))
                     {
@@ -101,7 +101,7 @@ namespace UI.GameScene.Windows.SettingsWindow
                     }
                     
                     var toggleGo = Instantiate(togglePrefab, toggleGroup.transform);
-                    Enum.TryParse(difficultyLevel.ToString(), out GameStates.DifficultyLevel diffLevel);
+                    Enum.TryParse(difficultyLevel.ToString(), out DifficultyLevel diffLevel);
                     toggleGo.GetComponent<DifficultyToggle>().Initialize(diffLevel, toggleGroup);
                 }
             }

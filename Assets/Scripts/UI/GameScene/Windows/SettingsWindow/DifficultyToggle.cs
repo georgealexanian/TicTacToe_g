@@ -11,10 +11,10 @@ namespace UI.GameScene.Windows.SettingsWindow
         [SerializeField] private TextMeshProUGUI label;
         [SerializeField] private Toggle toggle;
         
-        private GameStates.DifficultyLevel _difficultyLevel;
+        private DifficultyLevel _difficultyLevel;
         
         
-        public void Initialize(GameStates.DifficultyLevel difficultyLevel, ToggleGroup toggleGroup)
+        public void Initialize(DifficultyLevel difficultyLevel, ToggleGroup toggleGroup)
         {
             _difficultyLevel = difficultyLevel;
             label.text = _difficultyLevel.ToString();
