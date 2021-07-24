@@ -1,15 +1,27 @@
 using System;
-using Logic.Managers;
+using UI.GameScene.Windows.SettingsWindow;
 using UnityEngine;
 
 namespace UI.GameScene
 {
     public class GameSceneCanvasController : MonoBehaviour
     {
-        [SerializeField] private GameObject settingsWindow;
+        [SerializeField] private SettingsWindow settingsWindow;
+        [SerializeField] private GameView.GameView gameView;
+
+
+        private void Awake()
+        {
+            gameView.Init();
+        }
+        
+
         public void SettingsButton()
         {
-            settingsWindow.SetActive(true);
+            settingsWindow.OpenWindow((winName) =>
+            {
+                gameView.Init();
+            });
         }
     }
 }

@@ -18,7 +18,7 @@ namespace UI.GameScene.GameView
         private readonly List<GameObject> _cachedGridSeparators = new List<GameObject>();
 
 
-        private void Start()
+        public void Init()
         {
             var gridRectTr = gameView.GetComponent<RectTransform>();
             var cellSize = CalculateCellSize(gridRectTr);
@@ -93,17 +93,21 @@ namespace UI.GameScene.GameView
             for (int i = 0; i < _cachedGridSeparators.Count; i++)
             {
                 _cachedGridSeparators[i].SetActive(i < separatorCount);
+                
                 if (i < separatorCount / 2)
                 {
-                    _cachedGridSeparators[i].transform.localPosition = new Vector3(
+                    _cachedGridSeparators[i].transform.localPosition = new Vector3
+                    (
                         0,
                         ((cellSize + gridLayout.spacing.y) * (i + 1) + gridLayout.spacing.y * 2) * (-1),
                         0
                     );
+                    _cachedGridSeparators[i].transform.rotation = Quaternion.Euler(0, 0, 0);
                 }
-                else
+                else if (i < separatorCount && i >= separatorCount / 2)
                 {
-                    _cachedGridSeparators[i].transform.localPosition = new Vector3(
+                    _cachedGridSeparators[i].transform.localPosition = new Vector3
+                    (
                         ((cellSize + gridLayout.spacing.y) * (i - separatorCount / 2 + 1) + gridLayout.spacing.y * 2),
                         gridRectSize * (-1),
                         0

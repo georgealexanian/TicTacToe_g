@@ -1,4 +1,6 @@
 using Extensions;
+using UI.GameScene.Windows.SettingsWindow;
+using UnityEngine;
 
 namespace Logic.Managers
 {
@@ -12,7 +14,16 @@ namespace Logic.Managers
         
         public override void Initialize()
         {
-            
+            WindowsManager.Instance.WindowClosedCallBack += OnSettingsWindowClosed;
+        }
+
+
+        private void OnSettingsWindowClosed(string winName)
+        {
+            if (winName.Equals(nameof(SettingsWindow)))
+            {
+                
+            }
         }
     }
 }

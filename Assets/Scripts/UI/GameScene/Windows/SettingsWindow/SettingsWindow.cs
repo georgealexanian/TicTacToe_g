@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace UI.GameScene.Windows.SettingsWindow
 {
-    public class SettingsWindow : BaseWindow
+    public class SettingsWindow : BaseWindow<SettingsWindow>
     {
         [SerializeField] private TextMeshProUGUI gameSize;
         [SerializeField] private Slider gameSizeSlider;
