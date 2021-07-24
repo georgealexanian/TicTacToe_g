@@ -6,13 +6,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.GameScene.Windows
+namespace UI.GameScene.Windows.SettingsWindow
 {
     public class SettingsWindow : BaseWindow
     {
         [SerializeField] private TextMeshProUGUI gameSize;
         [SerializeField] private Slider gameSizeSlider;
         [SerializeField] private TMP_Dropdown opponentTypeDropDown;
+        [SerializeField] private ToggleGroup toggleGroup;
+        [SerializeField] private GameObject togglePrefab;
         
 
         private void OnEnable()

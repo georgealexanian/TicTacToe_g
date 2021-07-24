@@ -25,5 +25,13 @@ namespace Logic
             Noughts = 1, 
             Crosses = 2
         }
+
+        public enum DifficultyLevel
+        {
+            Unknown = 0, 
+            Easy = 1,
+            Medium = 2,
+            Hard = 3
+        }
     }
 }
