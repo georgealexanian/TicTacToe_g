@@ -14,7 +14,6 @@ namespace UI.GameScene.GameView
         [SerializeField] private GameObject gridSeparatorPrefab;
         [SerializeField] private Transform separatorHolder;
 
-        private readonly List<BoardCell> _cachedCells = new List<BoardCell>();
         private readonly List<GameObject> _cachedGridSeparators = new List<GameObject>();
 
 
@@ -48,31 +47,32 @@ namespace UI.GameScene.GameView
             }
 
             var gameCellCount = GameManager.Instance.GridSize * GameManager.Instance.GridSize;
-            var cachedCellCount = _cachedCells.Count;
+            var cachedCellCount = GameManager.Instance.CachedCells.Count;
             for (int i = 0; i < gameCellCount - cachedCellCount; i++)
             {
                 var cellGo = Instantiate(cellPrefab, gridLayout.transform);
                 var boardCell = cellGo.GetComponent<BoardCell>();
                 boardCell.Init();
-                _cachedCells.Add(boardCell);
+                GameManager.Instance.CachedCells.Add(boardCell);
             }
         }
 
 
         private void SetUpGridView(float cellSize, float gridRectSize)
         {
-            if (_cachedCells == null || _cachedCells.Count == 0)
+            if (GameManager.Instance.CachedCells == null || GameManager.Instance.CachedCells.Count == 0)
             {
                 return;
             }
 
             var cellSizeVector2 = new Vector2(cellSize, cellSize);
             var gameCellCount = GameManager.Instance.GridSize * GameManager.Instance.GridSize;
-            for (int i = 0; i < _cachedCells.Count; i++)
+            for (int i = 0; i < GameManager.Instance.CachedCells.Count; i++)
             {
-                _cachedCells[i].gameObject.SetActive(i < gameCellCount);
-                _cachedCells[i].GetComponent<Button>().interactable = true;
-                _cachedCells[i].GetComponent<RectTransform>().sizeDelta = cellSizeVector2;
+                GameManager.Instance.CachedCells[i].gameObject.SetActive(i < gameCellCount);
+                GameManager.Instance.CachedCells[i].GetComponent<Button>().interactable = true;
+                GameManager.Instance.CachedCells[i].GetComponent<RectTransform>().sizeDelta = cellSizeVector2;
+                GameManager.Instance.CachedCells[i].CalculateBoardCellPosition(i);
                 gridLayout.cellSize = cellSizeVector2;
             }
             

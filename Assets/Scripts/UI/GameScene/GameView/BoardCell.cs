@@ -1,7 +1,7 @@
 using DG.Tweening;
-using Extensions;
 using Logic;
 using Logic.Managers;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,8 +10,11 @@ namespace UI.GameScene.GameView
     public class BoardCell : MonoBehaviour
     {
         [SerializeField] private Image cellImage;
+        [SerializeField] private TextMeshProUGUI cellPosition;
+        
+        private BoardCellPosition BoardCellPosition { get; set; }
 
-        private Sprite _XMarkSprite;
+        private Sprite _xMarkSprite;
         private Sprite _0MarkSprite;
         
         public PlayerMark _cellMarkType { get; private set; }
@@ -19,8 +22,15 @@ namespace UI.GameScene.GameView
 
         public void Init()
         {
-            _XMarkSprite = AssetBundleManager.Instance.RetrieveAssetFromBundle<Sprite>("XMark");
+            _xMarkSprite = AssetBundleManager.Instance.RetrieveAssetFromBundle<Sprite>("XMark");
             _0MarkSprite = AssetBundleManager.Instance.RetrieveAssetFromBundle<Sprite>("0Mark");
+        }
+
+
+        public void CalculateBoardCellPosition(int index)
+        {
+            BoardCellPosition = GameManager.Instance.CalculateBoardCellPosition(index);
+            cellPosition.text = $"x: {BoardCellPosition.x} | y: {BoardCellPosition.y}";
         }
         
 
@@ -48,7 +58,7 @@ namespace UI.GameScene.GameView
             switch (_cellMarkType)
             {
                 case PlayerMark.Crosses:
-                    cellImage.sprite = _XMarkSprite;
+                    cellImage.sprite = _xMarkSprite;
                     break;
                 case PlayerMark.Noughts:
                     cellImage.sprite = _0MarkSprite;

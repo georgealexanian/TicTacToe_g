@@ -1,6 +1,8 @@
+using System;
+using System.Collections.Generic;
 using Extensions;
+using UI.GameScene.GameView;
 using UI.GameScene.Windows.SettingsWindow;
-using Logic;
 using UnityEngine;
 
 namespace Logic.Managers
@@ -14,6 +16,8 @@ namespace Logic.Managers
         public GameTurn GameTurn { get; private set; } = GameTurn.Player;
         public DifficultyLevel GameDifficulty { get; set; } = DifficultyLevel.Easy;
         
+        public readonly List<BoardCell> CachedCells = new List<BoardCell>();
+
         
         
         public override void Initialize()
@@ -37,6 +41,28 @@ namespace Logic.Managers
             {
                 
             }
+        }
+
+
+        public BoardCellPosition CalculateBoardCellPosition(int cellIndex)
+        {
+            var x = cellIndex - (cellIndex / GridSize) * GridSize + 1;
+            var y = (cellIndex / GridSize) + 1;
+            return new BoardCellPosition(x, y);
+        }
+    }
+
+
+    [Serializable]
+    public struct BoardCellPosition
+    {
+        public int x;
+        public int y;
+
+        public BoardCellPosition(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
         }
     }
 }
