@@ -17,13 +17,12 @@ namespace Logic.Managers
 
         private void LoadAssetBundle()
         {
-            var bundleName = PlayerPrefs.GetString(AssetBundleNameSaveKey);
+            var bundleName = PlayerPrefs.GetString(AssetBundleNameSaveKey); 
             _assetBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, bundleName));
             if (_assetBundle == null)
             {
                 Debug.LogError("Failed to load AssetBundle!");
             }
-            Debug.Log("AssetBundle loaded successfully");
         }
 
 
