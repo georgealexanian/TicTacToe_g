@@ -16,19 +16,34 @@ namespace Logic.Managers
         public PlayerMark OpponentMark { get; private set; } = PlayerMark.Noughts;
         public GameTurn GameTurn { get; private set; } = GameTurn.Player;
         public DifficultyLevel GameDifficulty { get; set; } = DifficultyLevel.Easy;
-        
+
         public readonly List<BoardCell> CachedCells = new List<BoardCell>();
         public Action<List<BoardCellPosition>> VictoryCallBack;
+        public Action DrawCallBack;
+        public Action<BoardCellPosition> HintPositionCallBack;
 
+        private HintPositionInfo hintPosition = new HintPositionInfo();
         private List<BoardCell> _currentGameCells = new List<BoardCell>();
         private bool _isWon;
+        
+        
+        
         
         public override void Initialize()
         {
             WindowsManager.Instance.WindowClosedCallBack += OnSettingsWindowClosed;
-            // PlayerMark = EnumExtensions.RandomEnumValue<PlayerMark>(); //should be implemented for PlayerAgainstComputer game
-            // OpponentMark = PlayerMark.NextEnumElement(1);
-            GameTurn = PlayerMark == PlayerMark.Crosses ? GameTurn.Player : GameTurn.Opponent;
+            // PlayerMark = EnumExtensions.RandomEnumValue<PlayerMark>(); //no longer needed! decided the player to be Crosses
+            // OpponentMark = PlayerMark.NextEnumElement(1); //no longer needed! decided the player to be Noughts
+            GameTurn = GameTurn.Player; // PlayerMark == PlayerMark.Crosses ? GameTurn.Player : GameTurn.Opponent;
+        }
+
+
+        public void HintRequested()
+        {
+            if (GameTurn == GameTurn.Player)
+            {
+                HintPositionCallBack?.Invoke(hintPosition.pos);
+            }
         }
 
 
@@ -67,6 +82,11 @@ namespace Logic.Managers
 
         public void StartCheckingVictory()
         {
+            SwitchGameTurn();
+
+            hintPosition.pos = new BoardCellPosition(0, 0);
+            hintPosition.isWinningPos = false;
+            
             for (int i = 0; i < GridSize; i++)
             {
                 var pos = i + 1;
@@ -76,7 +96,6 @@ namespace Logic.Managers
                 CheckVictoryInDiagonalRightToLeft();
             } 
             
-            SwitchGameTurn();
             _isWon = false;
         }
 
@@ -134,23 +153,61 @@ namespace Logic.Managers
 
         private void CheckVictory(List<BoardCell> tempList)
         {
-            if (tempList.Exists(x => x.CellMarkType == PlayerMark.Unknown) 
-                || (tempList.Exists(x => x.CellMarkType == PlayerMark.Crosses) 
-                    && tempList.Exists(x => x.CellMarkType == PlayerMark.Noughts)))
+            if (tempList.Exists(x => x.CellMarkType == PlayerMark.Unknown))
             {
-                
+                CheckHintPositions(tempList);
+                return;
+            }
+
+            if (tempList.Exists(x => x.CellMarkType == PlayerMark.Crosses) && tempList.Exists(x => x.CellMarkType == PlayerMark.Noughts))
+            {
+                CheckDraw();
             }
             else
             {
-                Debug.Log("Victory");
                 _isWon = true;
                 VictoryCallBack?.Invoke(tempList.Select(x => x.BoardCellPosition).ToList());
+                GameTurn = GameTurn.Player;
             }
         }
-        
+
+
+        private void CheckDraw()
+        {
+            if (!_currentGameCells.Exists(x => x.CellMarkType == PlayerMark.Unknown))
+            {
+                DrawCallBack?.Invoke();
+                GameTurn = GameTurn.Player;
+            }
+        }
+
+
+        private void CheckHintPositions(List<BoardCell> tempList)
+        {
+            if (hintPosition.isWinningPos)
+            {
+                return;
+            }
+            
+            if (!tempList.Exists(x => x.CellMarkType == PlayerMark.Noughts) && tempList.FindAll(x => x.CellMarkType == PlayerMark.Crosses).Count == GridSize - 1)
+            {
+                var winningHintPos = tempList.SingleOrDefault(x => x.CellMarkType == PlayerMark.Unknown);
+                if (winningHintPos != null)
+                {
+                    hintPosition.pos = winningHintPos.BoardCellPosition;
+                    hintPosition.isWinningPos = true;
+                }
+            }
+            else
+            {
+                hintPosition.pos = _currentGameCells.First(x => x.CellMarkType == PlayerMark.Unknown).BoardCellPosition;
+                hintPosition.isWinningPos = false;
+            }
+        }
     }
 
 
+    
     [Serializable]
     public struct BoardCellPosition
     {
@@ -161,6 +218,20 @@ namespace Logic.Managers
         {
             this.x = x;
             this.y = y;
+        }
+    }
+
+
+    [Serializable]
+    public struct HintPositionInfo
+    {
+        public BoardCellPosition pos;
+        public bool isWinningPos;
+
+        public HintPositionInfo(BoardCellPosition pos, bool isWinningPos)
+        {
+            this.pos = pos;
+            this.isWinningPos = isWinningPos;
         }
     }
 }

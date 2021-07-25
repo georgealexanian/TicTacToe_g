@@ -27,16 +27,29 @@ namespace UI.GameScene.GameView
             
             GameManager.Instance.GameStarting();
             GameManager.Instance.VictoryCallBack += VictoryCallBack;
+            GameManager.Instance.DrawCallBack += DrawCallBack;
         }
-        
-        
-        private async void VictoryCallBack(List<BoardCellPosition> winningCellPositions)
+
+
+        private async void FinishAndRestart()
         {
             inputBlocker.transform.SetAsLastSibling();
             inputBlocker.SetActive(true);
             await Task.Delay(3000);
             Init();
             inputBlocker.SetActive(false);
+        }
+        
+        
+        private void VictoryCallBack(List<BoardCellPosition> winningCellPositions)
+        {
+            FinishAndRestart();
+        }
+
+
+        public void DrawCallBack()
+        {
+            FinishAndRestart();
         }
         
 

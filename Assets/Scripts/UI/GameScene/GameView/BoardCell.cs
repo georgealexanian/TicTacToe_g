@@ -19,7 +19,19 @@ namespace UI.GameScene.GameView
 
         private Sprite _xMarkSprite;
         private Sprite _0MarkSprite;
+        private Image _cellBackground;
+        private Button _button;
+
+        private readonly Color32 _whiteColor = new Color32(255, 255, 255, 123);
+        private readonly Color32 _greenColor = new Color32(24, 255, 0, 89);
         
+        
+        
+        private void Awake()
+        {
+            _cellBackground = GetComponent<Image>();
+            _button = GetComponent<Button>();
+        }
 
 
         public void Init()
@@ -27,12 +39,13 @@ namespace UI.GameScene.GameView
             _xMarkSprite = AssetBundleManager.Instance.RetrieveAssetFromBundle<Sprite>("XMark");
             _0MarkSprite = AssetBundleManager.Instance.RetrieveAssetFromBundle<Sprite>("0Mark");
             GameManager.Instance.VictoryCallBack += VictoryCallBack;
+            GameManager.Instance.HintPositionCallBack += HintPositionCallBack;
         }
 
 
         public void Reset()
         {
-            GetComponent<Image>().color = new Color32(255, 255, 255, 123);
+            GetComponent<Image>().color = _whiteColor;
             cellImage.DOFade(0, 0.0f);
             cellImage.sprite = null;
             BoardCellPosition = new BoardCellPosition(0, 0);
@@ -42,9 +55,25 @@ namespace UI.GameScene.GameView
 
         private void VictoryCallBack(List<BoardCellPosition> winningCellPositions)
         {
-            if (winningCellPositions.Exists(cell=> cell.x == BoardCellPosition.x && cell.y == BoardCellPosition.y))
+            if (winningCellPositions.Exists(cell => cell.x == BoardCellPosition.x && cell.y == BoardCellPosition.y))
             {
-                GetComponent<Image>().color = new Color32(24, 255, 0, 89);
+                _cellBackground.color = _greenColor;
+            }
+        }
+        
+        
+        private void HintPositionCallBack(BoardCellPosition hintCellPosition)
+        {
+            if (hintCellPosition.x == BoardCellPosition.x && hintCellPosition.y == BoardCellPosition.y)
+            {
+                _button.interactable = false;
+                _cellBackground.DOColor(_greenColor, 0.5f).OnComplete(() =>
+                {
+                    _cellBackground.DOColor(_whiteColor, 0.5f).OnComplete(() =>
+                    {
+                        _button.interactable = true;
+                    });
+                });
             }
         }
 
@@ -58,7 +87,7 @@ namespace UI.GameScene.GameView
 
         public void OnCellClick()
         {
-            GetComponent<Button>().interactable = false; 
+            _button.interactable = false; 
             
             switch (GameManager.Instance.GameTurn)
             {

@@ -23,6 +23,11 @@ namespace UI.GameScene
             {
                 gameFinishedWindow.OpenWindow();
             };
+
+            GameManager.Instance.DrawCallBack += () =>
+            {
+                gameFinishedWindow.OpenWindow();
+            };
         }
         
 
@@ -33,5 +38,12 @@ namespace UI.GameScene
                 gameView.Init();
             });
         }
+
+
+        public void HintButton()
+        {
+            GameManager.Instance.HintRequested();
+        }
+        
     }
 }
