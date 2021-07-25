@@ -23,6 +23,8 @@ namespace UI.GameScene.GameView
             var cellSize = CalculateCellSize(gridRectTr);
             CacheGridCells(cellSize);
             SetUpGridView(cellSize, gridRectTr.sizeDelta.x);
+            
+            GameManager.Instance.GameStarting();
         }
 
 
@@ -70,6 +72,7 @@ namespace UI.GameScene.GameView
             for (int i = 0; i < GameManager.Instance.CachedCells.Count; i++)
             {
                 GameManager.Instance.CachedCells[i].gameObject.SetActive(i < gameCellCount);
+                GameManager.Instance.CachedCells[i].Reset();
                 GameManager.Instance.CachedCells[i].GetComponent<Button>().interactable = true;
                 GameManager.Instance.CachedCells[i].GetComponent<RectTransform>().sizeDelta = cellSizeVector2;
                 GameManager.Instance.CachedCells[i].CalculateBoardCellPosition(i);

@@ -20,6 +20,7 @@ namespace Logic
    
    public enum PlayerMark
    {
+       Unknown = 0,
        Noughts = 1, 
        Crosses = 2
    }

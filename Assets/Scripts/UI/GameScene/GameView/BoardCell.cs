@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using Logic;
 using Logic.Managers;
@@ -12,18 +14,38 @@ namespace UI.GameScene.GameView
         [SerializeField] private Image cellImage;
         [SerializeField] private TextMeshProUGUI cellPosition;
         
-        private BoardCellPosition BoardCellPosition { get; set; }
+        public BoardCellPosition BoardCellPosition { get; private set; }
+        public PlayerMark CellMarkType { get; private set; } = PlayerMark.Unknown;
 
         private Sprite _xMarkSprite;
         private Sprite _0MarkSprite;
         
-        public PlayerMark _cellMarkType { get; private set; }
 
 
         public void Init()
         {
             _xMarkSprite = AssetBundleManager.Instance.RetrieveAssetFromBundle<Sprite>("XMark");
             _0MarkSprite = AssetBundleManager.Instance.RetrieveAssetFromBundle<Sprite>("0Mark");
+            GameManager.Instance.VictoryCallBack += VictoryCallBack;
+        }
+
+
+        public void Reset()
+        {
+            GetComponent<Image>().color = new Color32(255, 255, 255, 123);
+            cellImage.DOFade(0, 0.0f);
+            cellImage.sprite = null;
+            BoardCellPosition = new BoardCellPosition(0, 0);
+            CellMarkType = PlayerMark.Unknown;
+        }
+
+
+        private void VictoryCallBack(List<BoardCellPosition> winningCellPositions)
+        {
+            if (winningCellPositions.Exists(cell=> cell.x == BoardCellPosition.x && cell.y == BoardCellPosition.y))
+            {
+                GetComponent<Image>().color = new Color32(24, 255, 0, 89);
+            }
         }
 
 
@@ -41,21 +63,21 @@ namespace UI.GameScene.GameView
             switch (GameManager.Instance.GameTurn)
             {
                 case GameTurn.Player:
-                    _cellMarkType = GameManager.Instance.PlayerMark;
+                    CellMarkType = GameManager.Instance.PlayerMark;
                     break;
                 case GameTurn.Opponent:
-                    _cellMarkType = GameManager.Instance.OpponentMark;
+                    CellMarkType = GameManager.Instance.OpponentMark;
                     break;
             }
             
-            GameManager.Instance.SwitchGameTurn();
+            GameManager.Instance.CheckVictory();
             MarkCell();
         }
 
 
         private void MarkCell()
         {
-            switch (_cellMarkType)
+            switch (CellMarkType)
             {
                 case PlayerMark.Crosses:
                     cellImage.sprite = _xMarkSprite;
@@ -66,5 +88,6 @@ namespace UI.GameScene.GameView
             }
             cellImage.DOFade(1, 0.5f);
         }
+
     }
 }
