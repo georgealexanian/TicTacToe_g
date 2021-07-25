@@ -1,7 +1,10 @@
 ManifestFileVersion: 0
-CRC: 2140508433
+CRC: 1507859058
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: uiartbundle
+      Name: uiartbundle1
+      Dependencies: {}
+    Info_1:
+      Name: uiartbundle2
       Dependencies: {}

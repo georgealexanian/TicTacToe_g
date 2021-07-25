@@ -46,14 +46,22 @@ namespace Editor
                 typeof(Sprite), 
                 false);
             var path = AssetDatabase.GetAssetPath(sprite);
-            AddAssetPath(path);
+            if (sprite != null)
+            {
+                AddAssetPath(path, sprite.name);
+            }
         }
 
 
-        private void AddAssetPath(string path)
+        private void AddAssetPath(string path, string spriteName)
         {
             if (!_chosenAssetPaths.Contains(path) && !path.Equals(""))
             {
+                if (_chosenAssetPaths.Exists(x => x.Contains(spriteName)))
+                {
+                    var indexToRemove = _chosenAssetPaths.FindIndex(x => x.Contains(spriteName));
+                    _chosenAssetPaths.RemoveAt(indexToRemove);
+                }
                 _chosenAssetPaths.Add(path);
             }
         }
@@ -65,11 +73,23 @@ namespace Editor
             if (!AssetDatabase.IsValidFolder(path))
             {
                 AssetDatabase.CreateFolder("Assets/BundledAssets", _bundleFolderName);
-            } 
+            }
+            else
+            {
+                var info = new DirectoryInfo(path);
+                var fileInfo = info.GetFiles();
+                if (fileInfo.Length > 0)
+                {
+                    Debug.LogError("Please choose a different Asset Bundle name since the current name already exists");
+                    return;
+                }
+            }
             
             MoveAssets();
             await Task.Delay(1000);
             BuildAllAssetBundles();
+            
+            Close();
         }
 
 
