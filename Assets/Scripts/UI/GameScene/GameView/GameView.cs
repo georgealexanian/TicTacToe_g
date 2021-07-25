@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DG.Tweening;
 using Logic.Managers;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,9 +17,11 @@ namespace UI.GameScene.GameView
         [SerializeField] private GameObject gridSeparatorPrefab;
         [SerializeField] private Transform separatorHolder;
         [SerializeField] private GameObject inputBlocker;
+        [SerializeField] private TextMeshProUGUI countDownTimer;
 
         private readonly List<GameObject> _cachedGridSeparators = new List<GameObject>();
-
+        private bool _shouldCountDown;
+        
 
         public void Init()
         {
@@ -29,6 +33,21 @@ namespace UI.GameScene.GameView
             GameManager.Instance.GameStarting();
             GameManager.Instance.VictoryAction += VictoryAction;
             GameManager.Instance.DrawAction += DrawAction;
+            GameManager.Instance.restartGameAction += () =>
+            {
+                FinishAndRestart();
+            };
+            
+            _shouldCountDown = true;
+        }
+
+
+        private void Update()
+        {
+            if (_shouldCountDown)
+            {
+                countDownTimer.text = (DateTime.UtcNow - GameManager.Instance.GameStartTime).Seconds.ToString();
+            }
         }
 
 
@@ -36,7 +55,7 @@ namespace UI.GameScene.GameView
         {
             inputBlocker.transform.SetAsLastSibling();
             inputBlocker.SetActive(true);
-            await Task.Delay(3000);
+            await Task.Delay(100);
             DOTween.KillAll();
             Init();
             inputBlocker.SetActive(false);
@@ -45,13 +64,15 @@ namespace UI.GameScene.GameView
         
         private void VictoryAction(List<BoardCellPosition> winningCellPositions)
         {
-            FinishAndRestart();
+            // FinishAndRestart();
+            _shouldCountDown = false;
         }
 
 
         private void DrawAction()
         {
-            FinishAndRestart();
+            // FinishAndRestart();
+            _shouldCountDown = false;
         }
         
 

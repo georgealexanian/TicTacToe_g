@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Extensions;
 using UI.GameScene.GameView;
+using UI.GameScene.Windows.GameFinishedWindow;
 using UI.GameScene.Windows.SettingsWindow;
 using UnityEngine;
 
@@ -17,12 +18,15 @@ namespace Logic.Managers
         public GameTurn GameTurn { get; private set; } = GameTurn.Player;
         public DifficultyLevel GameDifficulty { get; set; } = DifficultyLevel.Easy;
         public Stack<BoardCellPosition> TrackedSteps { get; private set; } = new Stack<BoardCellPosition>();
+        public DateTime GameStartTime { get; private set; }
+        
 
         public readonly List<BoardCell> CachedCells = new List<BoardCell>();
         public Action<List<BoardCellPosition>> VictoryAction;
         public Action DrawAction;
         public Action<BoardCellPosition> HintPositionAction;
         public Action<BoardCellPosition> UndoAction;
+        public Action restartGameAction;
 
         private HintPositionInfo _hintPosition = new HintPositionInfo();
         private List<BoardCell> _currentGameCells = new List<BoardCell>();
@@ -31,7 +35,7 @@ namespace Logic.Managers
         
         public override void Initialize()
         {
-            WindowsManager.Instance.WindowClosedCallBack += OnSettingsWindowClosed;
+            WindowsManager.Instance.WindowClosedCallBack += OnWindowClosed;
             // PlayerMark = EnumExtensions.RandomEnumValue<PlayerMark>(); //no longer needed! decided the player to be Crosses
             // OpponentMark = PlayerMark.NextEnumElement(1); //no longer needed! decided the player to be Noughts
             GameTurn = GameTurn.Player; // PlayerMark == PlayerMark.Crosses ? GameTurn.Player : GameTurn.Opponent;
@@ -62,16 +66,21 @@ namespace Logic.Managers
 
         public void GameStarting()
         {
+            GameStartTime = DateTime.UtcNow;
             _currentGameCells = CachedCells.Take(GridSize * GridSize).ToList();
             TrackedSteps.Clear();
         }
 
 
-        private void OnSettingsWindowClosed(string winName)
+        private void OnWindowClosed(string winName)
         {
             if (winName.Equals(nameof(SettingsWindow)))
             {
                 _currentGameCells = CachedCells.Take(GridSize * GridSize).ToList();
+            }
+            else if(winName.Equals(nameof(GameFinishedWindow)))
+            {
+                restartGameAction?.Invoke();
             }
         }
 
