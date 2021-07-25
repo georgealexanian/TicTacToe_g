@@ -17,12 +17,11 @@ namespace Logic.Managers
         public GameTurn GameTurn { get; private set; } = GameTurn.Player;
         public DifficultyLevel GameDifficulty { get; set; } = DifficultyLevel.Easy;
         
-        
         public readonly List<BoardCell> CachedCells = new List<BoardCell>();
+        public Action<List<BoardCellPosition>> VictoryCallBack;
 
         private List<BoardCell> _currentGameCells = new List<BoardCell>();
-        public Action<List<BoardCellPosition>> VictoryCallBack;
-        
+        private bool _isWon;
         
         public override void Initialize()
         {
@@ -73,14 +72,22 @@ namespace Logic.Managers
                 var pos = i + 1;
                 CheckVictoryInColumnsOrRows(cell => cell.BoardCellPosition.x == pos);
                 CheckVictoryInColumnsOrRows(cell => cell.BoardCellPosition.y == pos);
-                CheckVictoryInDiagonals();
+                CheckVictoryInDiagonalLeftToRight();
+                CheckVictoryInDiagonalRightToLeft();
             } 
+            
             SwitchGameTurn();
+            _isWon = false;
         }
 
 
         private void CheckVictoryInColumnsOrRows(Predicate<BoardCell> predicate)
         {
+            if (_isWon)
+            {
+                return;
+            }
+            
             List<BoardCell> tempList = new List<BoardCell>();
             tempList = _currentGameCells.FindAll(predicate);
 
@@ -93,10 +100,34 @@ namespace Logic.Managers
         }
 
 
-        private void CheckVictoryInDiagonals()
+        private void CheckVictoryInDiagonalLeftToRight()
         {
+            if (_isWon)
+            {
+                return;
+            }
+            
             List<BoardCell> tempList = new List<BoardCell>();
             tempList = _currentGameCells.FindAll(x => x.BoardCellPosition.x == x.BoardCellPosition.y);
+            CheckVictory(tempList);
+        }
+
+
+        private void CheckVictoryInDiagonalRightToLeft()
+        {
+            if (_isWon)
+            {
+                return;
+            }
+
+            List<BoardCell> tempList = new List<BoardCell>();
+            for (int i = 0; i < GridSize; i++)
+            {
+                var cellToAdd = _currentGameCells
+                    .Find(cell => cell.BoardCellPosition.x == GridSize - i && cell.BoardCellPosition.y == i + 1);
+                tempList.Add(cellToAdd);
+            }
+            
             CheckVictory(tempList);
         }
 
@@ -112,6 +143,7 @@ namespace Logic.Managers
             else
             {
                 Debug.Log("Victory");
+                _isWon = true;
                 VictoryCallBack?.Invoke(tempList.Select(x => x.BoardCellPosition).ToList());
             }
         }
