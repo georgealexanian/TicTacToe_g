@@ -52,7 +52,9 @@ namespace UI.GameScene.GameView
             for (int i = 0; i < gameCellCount - cachedCellCount; i++)
             {
                 var cellGo = Instantiate(cellPrefab, gridLayout.transform);
-                _cachedCells.Add(cellGo.GetComponent<BoardCell>());
+                var boardCell = cellGo.GetComponent<BoardCell>();
+                boardCell.Init();
+                _cachedCells.Add(boardCell);
             }
         }
 

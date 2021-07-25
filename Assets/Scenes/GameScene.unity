@@ -357,6 +357,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6132441914dec4ad69bb10f63eaa49db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  background: {fileID: 1924483384}
   settingsWindow: {fileID: 1643949782}
   gameView: {fileID: 547105159}
 --- !u!114 &755636816
@@ -884,7 +885,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 084a44c257527419aa04456dd7c3126f, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

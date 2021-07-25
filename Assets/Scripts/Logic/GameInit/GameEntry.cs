@@ -10,7 +10,9 @@ namespace GameInit
         {
             GameManager.Instance.Initialize();
             AudioManager.Instance.Initialize();
-
+            WindowsManager.Instance.Initialize();
+            AssetBundleManager.Instance.Initialize();
+            
             SceneManager.LoadScene(Scenes.GameScene.ToString());
         }
     }

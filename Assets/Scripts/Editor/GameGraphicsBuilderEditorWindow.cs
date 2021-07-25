@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Logic.Managers;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -44,7 +45,8 @@ namespace Editor
                 sprite,
                 typeof(Sprite), 
                 false);
-            AddAssetPath(AssetDatabase.GetAssetPath(sprite));
+            var path = AssetDatabase.GetAssetPath(sprite);
+            AddAssetPath(path);
         }
 
 
@@ -83,6 +85,7 @@ namespace Editor
                     AssetDatabase.MoveAsset(path, newPath);
                 }
                 AssetImporter.GetAtPath(newPath).SetAssetBundleNameAndVariant(_bundleFolderName, "");
+                PlayerPrefs.SetString(AssetBundleManager.AssetBundleNameSaveKey, _bundleFolderName);
             }
         }
 
