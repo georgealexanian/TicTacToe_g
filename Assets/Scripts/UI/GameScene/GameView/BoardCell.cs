@@ -70,7 +70,7 @@ namespace UI.GameScene.GameView
                     break;
             }
             
-            GameManager.Instance.CheckVictory();
+            GameManager.Instance.StartCheckingVictory();
             MarkCell();
         }
 

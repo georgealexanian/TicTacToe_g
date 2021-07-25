@@ -66,13 +66,14 @@ namespace Logic.Managers
         }
 
 
-        public void CheckVictory()
+        public void StartCheckingVictory()
         {
             for (int i = 0; i < GridSize; i++)
             {
                 var pos = i + 1;
                 CheckVictoryInColumnsOrRows(cell => cell.BoardCellPosition.x == pos);
                 CheckVictoryInColumnsOrRows(cell => cell.BoardCellPosition.y == pos);
+                CheckVictoryInDiagonals();
             } 
             SwitchGameTurn();
         }
@@ -87,12 +88,26 @@ namespace Logic.Managers
             {
                 return;
             }
-            
+
+            CheckVictory(tempList);
+        }
+
+
+        private void CheckVictoryInDiagonals()
+        {
+            List<BoardCell> tempList = new List<BoardCell>();
+            tempList = _currentGameCells.FindAll(x => x.BoardCellPosition.x == x.BoardCellPosition.y);
+            CheckVictory(tempList);
+        }
+
+
+        private void CheckVictory(List<BoardCell> tempList)
+        {
             if (tempList.Exists(x => x.CellMarkType == PlayerMark.Unknown) 
-                 || (tempList.Exists(x => x.CellMarkType == PlayerMark.Crosses) 
-                && tempList.Exists(x => x.CellMarkType == PlayerMark.Noughts)))
+                || (tempList.Exists(x => x.CellMarkType == PlayerMark.Crosses) 
+                    && tempList.Exists(x => x.CellMarkType == PlayerMark.Noughts)))
             {
-                    
+                
             }
             else
             {
@@ -100,6 +115,7 @@ namespace Logic.Managers
                 VictoryCallBack?.Invoke(tempList.Select(x => x.BoardCellPosition).ToList());
             }
         }
+        
     }
 
 
