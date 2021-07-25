@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 2140508433
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: uiartbundle
+      Dependencies: {}
