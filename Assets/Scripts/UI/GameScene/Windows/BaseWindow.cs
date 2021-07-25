@@ -1,10 +1,11 @@
 using System;
 using Logic.Managers;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI.GameScene.Windows
 {
-    [RequireComponent(typeof(Canvas))]
+    [RequireComponent(typeof(GraphicRaycaster))]
     public class BaseWindow<T> : MonoBehaviour
     {
         private Canvas _canvas;

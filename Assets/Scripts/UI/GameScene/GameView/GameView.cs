@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Logic.Managers;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +13,7 @@ namespace UI.GameScene.GameView
         [SerializeField] private GameObject cellPrefab;
         [SerializeField] private GameObject gridSeparatorPrefab;
         [SerializeField] private Transform separatorHolder;
+        [SerializeField] private GameObject inputBlocker;
 
         private readonly List<GameObject> _cachedGridSeparators = new List<GameObject>();
 
@@ -25,8 +26,19 @@ namespace UI.GameScene.GameView
             SetUpGridView(cellSize, gridRectTr.sizeDelta.x);
             
             GameManager.Instance.GameStarting();
+            GameManager.Instance.VictoryCallBack += VictoryCallBack;
         }
-
+        
+        
+        private async void VictoryCallBack(List<BoardCellPosition> winningCellPositions)
+        {
+            inputBlocker.transform.SetAsLastSibling();
+            inputBlocker.SetActive(true);
+            await Task.Delay(3000);
+            Init();
+            inputBlocker.SetActive(false);
+        }
+        
 
         private float CalculateCellSize(RectTransform gridRectTr)
         {
