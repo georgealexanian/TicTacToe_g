@@ -1,3 +1,5 @@
+using Extensions;
+using Logic;
 using Logic.Managers;
 using UI.GameScene.Windows.GameFinishedWindow;
 using UI.GameScene.Windows.SettingsWindow;
@@ -22,12 +24,18 @@ namespace UI.GameScene
             GameManager.Instance.VictoryCallBack += (cells) =>
             {
                 gameFinishedWindow.OpenWindow();
+                gameFinishedWindow.Init(
+                    false, 
+                    GameManager.Instance.GameTurn.NextEnumElement(1).ToString());
             };
 
             GameManager.Instance.DrawCallBack += () =>
             {
                 gameFinishedWindow.OpenWindow();
+                gameFinishedWindow.Init(true, "");
             };
+
+            SettingsButton();
         }
         
 

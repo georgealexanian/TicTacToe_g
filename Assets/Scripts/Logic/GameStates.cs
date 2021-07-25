@@ -13,7 +13,7 @@ namespace Logic
    {
        Unknown = 0,
        LocalHuman = 1,
-       RemoteHuman = 2,
+       // RemoteHuman = 2,
        Computer = 3
    }
    
