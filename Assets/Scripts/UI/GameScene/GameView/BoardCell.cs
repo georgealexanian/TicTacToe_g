@@ -22,7 +22,7 @@ namespace UI.GameScene.GameView
         private Image _cellBackground;
         private Button _button;
 
-        private readonly Color32 _whiteColor = new Color32(255, 255, 255, 123);
+        private readonly Color32 _whiteColor = new Color32(255, 255, 255, 90);
         private readonly Color32 _greenColor = new Color32(24, 255, 0, 89);
         
         
@@ -31,6 +31,7 @@ namespace UI.GameScene.GameView
         {
             _cellBackground = GetComponent<Image>();
             _button = GetComponent<Button>();
+            _cellBackground.DOColor(_whiteColor, 0);
         }
 
 

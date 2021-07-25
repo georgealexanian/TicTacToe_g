@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DG.Tweening;
 using Logic.Managers;
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,6 +37,7 @@ namespace UI.GameScene.GameView
             inputBlocker.transform.SetAsLastSibling();
             inputBlocker.SetActive(true);
             await Task.Delay(3000);
+            DOTween.KillAll();
             Init();
             inputBlocker.SetActive(false);
         }
