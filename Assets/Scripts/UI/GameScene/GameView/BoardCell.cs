@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Extensions;
 using Logic;
 using Logic.Managers;
@@ -38,7 +39,6 @@ namespace UI.GameScene.GameView
             }
             
             GameManager.Instance.SwitchGameTurn();
-            
             MarkCell();
         }
 
@@ -54,6 +54,7 @@ namespace UI.GameScene.GameView
                     cellImage.sprite = _0MarkSprite;
                     break;
             }
+            cellImage.DOFade(1, 0.5f);
         }
     }
 }
