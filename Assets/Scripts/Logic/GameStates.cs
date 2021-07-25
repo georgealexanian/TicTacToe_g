@@ -4,8 +4,8 @@ namespace Logic
 {
    public enum GameTurn
    {
-       Player = 1,
-       Opponent = 2
+       Player = 0,
+       Opponent = 1
    }
    
    

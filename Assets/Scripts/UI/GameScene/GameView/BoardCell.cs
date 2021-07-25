@@ -39,22 +39,37 @@ namespace UI.GameScene.GameView
         {
             _xMarkSprite = AssetBundleManager.Instance.RetrieveAssetFromBundle<Sprite>("XMark");
             _0MarkSprite = AssetBundleManager.Instance.RetrieveAssetFromBundle<Sprite>("0Mark");
-            GameManager.Instance.VictoryCallBack += VictoryCallBack;
-            GameManager.Instance.HintPositionCallBack += HintPositionCallBack;
+            
+            GameManager.Instance.VictoryAction += VictoryAction;
+            GameManager.Instance.HintPositionAction += HintPositionAction;
+            GameManager.Instance.UndoAction += UndoAction;
         }
 
 
-        public void Reset()
+        public void ResetCell(bool alsoPosition)
         {
-            GetComponent<Image>().color = _whiteColor;
+            _cellBackground.color = _whiteColor;
             cellImage.DOFade(0, 0.0f);
             cellImage.sprite = null;
-            BoardCellPosition = new BoardCellPosition(0, 0);
+            if (alsoPosition)
+            {
+                BoardCellPosition = new BoardCellPosition(0, 0);
+            }
             CellMarkType = PlayerMark.Unknown;
+            _button.interactable = true;
         }
 
 
-        private void VictoryCallBack(List<BoardCellPosition> winningCellPositions)
+        private void UndoAction(BoardCellPosition boardCellPosition)
+        {
+            if (BoardCellPosition.x == boardCellPosition.x && BoardCellPosition.y == boardCellPosition.y)
+            {
+                ResetCell(false);
+            }
+        }
+
+
+        private void VictoryAction(List<BoardCellPosition> winningCellPositions)
         {
             if (winningCellPositions.Exists(cell => cell.x == BoardCellPosition.x && cell.y == BoardCellPosition.y))
             {
@@ -63,7 +78,7 @@ namespace UI.GameScene.GameView
         }
         
         
-        private void HintPositionCallBack(BoardCellPosition hintCellPosition)
+        private void HintPositionAction(BoardCellPosition hintCellPosition)
         {
             if (hintCellPosition.x == BoardCellPosition.x && hintCellPosition.y == BoardCellPosition.y)
             {
@@ -100,7 +115,7 @@ namespace UI.GameScene.GameView
                     break;
             }
             
-            GameManager.Instance.StartCheckingVictory();
+            GameManager.Instance.StartCheckingVictory(BoardCellPosition);
             MarkCell();
         }
 
@@ -119,5 +134,12 @@ namespace UI.GameScene.GameView
             cellImage.DOFade(1, 0.5f);
         }
 
+
+        private void OnDestroy()
+        {
+            GameManager.Instance.VictoryAction -= VictoryAction;
+            GameManager.Instance.HintPositionAction -= HintPositionAction;
+            GameManager.Instance.UndoAction -= UndoAction;
+        }
     }
 }

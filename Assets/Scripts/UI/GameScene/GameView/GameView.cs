@@ -27,8 +27,8 @@ namespace UI.GameScene.GameView
             SetUpGridView(cellSize, gridRectTr.sizeDelta.x);
             
             GameManager.Instance.GameStarting();
-            GameManager.Instance.VictoryCallBack += VictoryCallBack;
-            GameManager.Instance.DrawCallBack += DrawCallBack;
+            GameManager.Instance.VictoryAction += VictoryAction;
+            GameManager.Instance.DrawAction += DrawAction;
         }
 
 
@@ -43,13 +43,13 @@ namespace UI.GameScene.GameView
         }
         
         
-        private void VictoryCallBack(List<BoardCellPosition> winningCellPositions)
+        private void VictoryAction(List<BoardCellPosition> winningCellPositions)
         {
             FinishAndRestart();
         }
 
 
-        public void DrawCallBack()
+        private void DrawAction()
         {
             FinishAndRestart();
         }
@@ -99,7 +99,7 @@ namespace UI.GameScene.GameView
             for (int i = 0; i < GameManager.Instance.CachedCells.Count; i++)
             {
                 GameManager.Instance.CachedCells[i].gameObject.SetActive(i < gameCellCount);
-                GameManager.Instance.CachedCells[i].Reset();
+                GameManager.Instance.CachedCells[i].ResetCell(true);
                 GameManager.Instance.CachedCells[i].GetComponent<Button>().interactable = true;
                 GameManager.Instance.CachedCells[i].GetComponent<RectTransform>().sizeDelta = cellSizeVector2;
                 GameManager.Instance.CachedCells[i].CalculateBoardCellPosition(i);

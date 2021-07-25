@@ -21,7 +21,7 @@ namespace UI.GameScene
             gameView.Init();
             background.sprite = AssetBundleManager.Instance.RetrieveAssetFromBundle<Sprite>("Background");
             
-            GameManager.Instance.VictoryCallBack += (cells) =>
+            GameManager.Instance.VictoryAction += (cells) =>
             {
                 gameFinishedWindow.OpenWindow();
                 gameFinishedWindow.Init(
@@ -29,7 +29,7 @@ namespace UI.GameScene
                     GameManager.Instance.GameTurn.NextEnumElement(1).ToString());
             };
 
-            GameManager.Instance.DrawCallBack += () =>
+            GameManager.Instance.DrawAction += () =>
             {
                 gameFinishedWindow.OpenWindow();
                 gameFinishedWindow.Init(true, "");
@@ -52,6 +52,11 @@ namespace UI.GameScene
         {
             GameManager.Instance.HintRequested();
         }
-        
+
+
+        public void UndoButton()
+        {
+            GameManager.Instance.UndoRequested();
+        }
     }
 }
