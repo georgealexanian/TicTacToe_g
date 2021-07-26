@@ -99,7 +99,7 @@ namespace UI.GameScene.GameView
             BoardCellPosition = GameManager.Instance.CalculateBoardCellPosition(index);
             cellPosition.text = $"x: {BoardCellPosition.x} | y: {BoardCellPosition.y}";
         }
-        
+         
 
         public void OnCellClick()
         {

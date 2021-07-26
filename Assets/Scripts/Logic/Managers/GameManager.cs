@@ -212,9 +212,13 @@ namespace Logic.Managers
 
         private void CheckVictory(List<BoardCell> tempList)
         {
+            if (tempList == null)
+            {
+                return;
+            }
+
             if (tempList.Exists(x => x.CellMarkType == PlayerMark.Unknown))
             {
-                // CheckHintPositions(tempList, PlayerMark.Noughts, 1);
                 if (_nextStep)
                 {
                     NextStepAction();
