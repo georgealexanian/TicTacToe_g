@@ -1,7 +1,7 @@
 using System;
 using Logic.Managers;
 
-namespace Logic.GameFlow
+namespace Logic.GameFlow.GameModeController
 {
     public abstract class ModeController
     {

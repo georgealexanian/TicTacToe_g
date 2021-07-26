@@ -1,7 +1,6 @@
 using Logic.Managers;
-using UnityEngine;
 
-namespace Logic.GameFlow
+namespace Logic.GameFlow.GameModeController
 {
     public class HumanToHumanModeController : ModeController
     {

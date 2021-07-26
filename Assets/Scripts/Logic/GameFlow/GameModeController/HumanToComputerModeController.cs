@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Logic.Managers;
 using UI.GameScene.GameView;
-using UnityEngine;
 
-namespace Logic.GameFlow
+namespace Logic.GameFlow.GameModeController
 {
     public class HumanToComputerModeController : ModeController
     {
