@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Logic;
 using Logic.Managers;
 using NUnit.Framework;
@@ -12,7 +10,7 @@ using UnityEngine.TestTools;
 using Debug = UnityEngine.Debug;
 
 
-namespace Editor
+namespace Editor.UnitTests.GameFlowTests
 {
     public class VictoryUnitTest
     {
@@ -29,13 +27,20 @@ namespace Editor
             for (int i = 0; i < 9; i++)
             {
                 var boardCell = holderGo.AddComponent<BoardCell>();
-                boardCell.GetType().GetProperty("BoardCellPosition")?.SetValue(boardCell, new BoardCellPosition(i - (i / 3) * 3 + 1, i / 3 + 1));
+                boardCell
+                    .GetType()
+                    .GetProperty("BoardCellPosition")?
+                    .SetValue(boardCell, new BoardCellPosition(i - (i / 3) * 3 + 1, i / 3 + 1));
                 Debug.Log(boardCell.BoardCellPosition.x + "      " + boardCell.BoardCellPosition.y);
             }
 
             var boardCells = holderGo.GetComponents<BoardCell>().ToList();
-            type.GetProperty(nameof(_gameManager.CurrentGameCells))?.SetValue(_gameManager, boardCells);
-            type.GetProperty(nameof(_gameManager.GridSize))?.SetValue(_gameManager, 3);
+            type
+                .GetProperty(nameof(_gameManager.CurrentGameCells))?
+                .SetValue(_gameManager, boardCells);
+            type
+                .GetProperty(nameof(_gameManager.GridSize))?
+                .SetValue(_gameManager, 3);
 
             List<BoardCellPosition> receivedList = null;
             const int successfulTestCount = 4;
