@@ -15,8 +15,8 @@ namespace Logic.Managers
     {
         public int GridSize { get; set; } = 3;
         public OpponentType OpponentType { get; set; } = OpponentType.LocalHuman;
-        public PlayerMark PlayerMark { get; private set; } = PlayerMark.Crosses;
-        public PlayerMark OpponentMark { get; private set; } = PlayerMark.Noughts;
+        public PlayerMark PlayerMark { get; } = PlayerMark.Crosses;
+        public PlayerMark OpponentMark { get; } = PlayerMark.Noughts;
         public GameTurn GameTurn { get; private set; } = GameTurn.Player;
         public DifficultyLevel GameDifficulty
         {
