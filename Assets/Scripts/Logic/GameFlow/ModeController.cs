@@ -1,22 +1,30 @@
 using System;
+using Logic.Managers;
 
 namespace Logic.GameFlow
 {
     public abstract class ModeController
     {
-        public static Action OpponentActionCompleted;
-        public static Action PlayerActionCompleted;
-        
-        
+        public static Action OnOpponentAction;
+        public static Action OnPlayerAction;
+        protected GameManager GameMan;
+
+
+        protected ModeController(GameManager gameManager)
+        {
+            GameMan = gameManager;
+        }
+
+
         public virtual void OpponentAction()
         {
-            OpponentActionCompleted?.Invoke();
+            OnOpponentAction?.Invoke();
         }
 
 
         public virtual void PlayerAction()
         {
-            PlayerActionCompleted?.Invoke();
+            OnPlayerAction?.Invoke();
         }
     }
 }

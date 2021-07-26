@@ -6,6 +6,7 @@ using Logic.GameFlow;
 using UI.GameScene.GameView;
 using UI.GameScene.Windows.GameFinishedWindow;
 using UI.GameScene.Windows.SettingsWindow;
+using UnityEngine;
 
 namespace Logic.Managers
 {
@@ -18,6 +19,8 @@ namespace Logic.Managers
         public GameTurn GameTurn { get; private set; } = GameTurn.Player;
         public DifficultyLevel GameDifficulty { get; set; } = DifficultyLevel.Easy;
         public DateTime GameStartTime { get; private set; }
+        public List<BoardCell> CurrentGameCells { get; private set; } = new List<BoardCell>();
+
 
         public readonly List<BoardCell> CachedCells = new List<BoardCell>();
         public Action<List<BoardCellPosition>> VictoryAction;
@@ -28,9 +31,9 @@ namespace Logic.Managers
 
         private readonly Stack<BoardCellPosition> _trackedSteps  = new Stack<BoardCellPosition>();
         private HintPositionInfo _hintPosition = new HintPositionInfo();
-        private List<BoardCell> _currentGameCells = new List<BoardCell>();
-        private ModeController _modeController = new HumanToHumanModeController();
+        private ModeController _modeController;
         private bool _isWon;
+        private bool _nextStep;
         
         
         public override void Initialize()
@@ -40,20 +43,26 @@ namespace Logic.Managers
             ChooseModeController();
         }
 
+        
+        public void GameStarting()
+        {
+            GameStartTime = DateTime.UtcNow;
+            CurrentGameCells = CachedCells.Take(GridSize * GridSize).ToList();
+            _trackedSteps.Clear();
+            _nextStep = false;
+        }
+        
 
         public void UndoRequested()
         {
-            UndoAction?.Invoke(_trackedSteps.Pop());
             GameTurn = GameTurn == GameTurn.Player ? GameTurn.Opponent : GameTurn.Player;
+            UndoAction?.Invoke(_trackedSteps.Pop());
         }
 
 
         public void HintRequested()
         {
-            if (GameTurn == GameTurn.Player)
-            {
-                HintPositionAction?.Invoke(_hintPosition.pos);
-            }
+            HintPositionAction?.Invoke(_hintPosition.pos);
         }
 
 
@@ -63,19 +72,11 @@ namespace Logic.Managers
         }
 
 
-        public void GameStarting()
-        {
-            GameStartTime = DateTime.UtcNow;
-            _currentGameCells = CachedCells.Take(GridSize * GridSize).ToList();
-            _trackedSteps.Clear();
-        }
-
-
         private void OnWindowClosed(string winName)
         {
             if (winName.Equals(nameof(SettingsWindow)))
             {
-                _currentGameCells = CachedCells.Take(GridSize * GridSize).ToList();
+                CurrentGameCells = CachedCells.Take(GridSize * GridSize).ToList();
                 ChooseModeController();
                 
             }
@@ -92,10 +93,10 @@ namespace Logic.Managers
             {
                 case OpponentType.Unknown: 
                 case OpponentType.LocalHuman:
-                    _modeController = new HumanToHumanModeController();
+                    _modeController = new HumanToHumanModeController(this);
                     break;
                 case OpponentType.Computer:
-                    _modeController = new HumanToComputerModeController();
+                    _modeController = new HumanToComputerModeController(this);
                     break;
             }
         }
@@ -121,20 +122,20 @@ namespace Logic.Managers
             _hintPosition.pos = new BoardCellPosition(0, 0);
             _hintPosition.isWinningPos = false;
             
-            for (int i = 0; i < GridSize; i++)
+            for (var i = 0; i < GridSize; i++)
             {
                 var pos = i + 1;
-                CheckVictoryInColumnsOrRows(cell => cell.BoardCellPosition.x == pos);
-                CheckVictoryInColumnsOrRows(cell => cell.BoardCellPosition.y == pos);
-                CheckVictoryInDiagonal(true);
-                CheckVictoryInDiagonal(false);
+                CheckColumnsOrRows(cell => cell.BoardCellPosition.x == pos);
+                CheckColumnsOrRows(cell => cell.BoardCellPosition.y == pos);
             } 
+            CheckDiagonals(true);
+            CheckDiagonals(false);
             
             _isWon = false;
         }
 
 
-        private void CheckVictoryInColumnsOrRows(Predicate<BoardCell> predicate)
+        private void CheckColumnsOrRows(Predicate<BoardCell> predicate)
         {
             if (_isWon)
             {
@@ -142,7 +143,7 @@ namespace Logic.Managers
             }
             
             List<BoardCell> tempList = new List<BoardCell>();
-            tempList = _currentGameCells.FindAll(predicate);
+            tempList = CurrentGameCells.FindAll(predicate);
 
             if (tempList.Count == 0)
             {
@@ -153,7 +154,7 @@ namespace Logic.Managers
         }
 
 
-        private void CheckVictoryInDiagonal(bool leftToRight)
+        private void CheckDiagonals(bool leftToRight)
         {
             if (_isWon)
             {
@@ -163,19 +164,35 @@ namespace Logic.Managers
             List<BoardCell> tempList = new List<BoardCell>();
             if (leftToRight)
             {
-                tempList = _currentGameCells.FindAll(x => x.BoardCellPosition.x == x.BoardCellPosition.y);
+                tempList = GetDiagonalCells(true);
             }
             else
             {
-                for (int i = 0; i < GridSize; i++)
-                {
-                    var cellToAdd = _currentGameCells
-                        .Find(cell => cell.BoardCellPosition.x == GridSize - i && cell.BoardCellPosition.y == i + 1);
-                    tempList.Add(cellToAdd);
-                }
+                tempList = GetDiagonalCells(false);
+                _nextStep = true;
             }
             
             CheckVictory(tempList);
+        }
+
+
+        public List<BoardCell> GetDiagonalCells(bool leftToRight)
+        {
+            if (leftToRight)
+            {
+                return CurrentGameCells.FindAll(x => x.BoardCellPosition.x == x.BoardCellPosition.y);
+            }
+            else
+            {
+                var tempList = new List<BoardCell>();
+                for (int i = 0; i < GridSize; i++)
+                {
+                    var cellToAdd = CurrentGameCells
+                        .Find(cell => cell.BoardCellPosition.x == GridSize - i && cell.BoardCellPosition.y == i + 1);
+                    tempList.Add(cellToAdd);
+                }
+                return tempList;
+            }
         }
 
 
@@ -183,8 +200,11 @@ namespace Logic.Managers
         {
             if (tempList.Exists(x => x.CellMarkType == PlayerMark.Unknown))
             {
-                CheckHintPositions(tempList);
-                NextStepAction();
+                CheckHintPositions(tempList, PlayerMark.Noughts);
+                if (_nextStep)
+                {
+                    NextStepAction();
+                }
                 return;
             }
 
@@ -210,7 +230,7 @@ namespace Logic.Managers
 
         private void CheckDraw()
         {
-            if (!_currentGameCells.Exists(x => x.CellMarkType == PlayerMark.Unknown))
+            if (!CurrentGameCells.Exists(x => x.CellMarkType == PlayerMark.Unknown))
             {
                 DrawAction?.Invoke();
                 _trackedSteps.Clear();
@@ -219,33 +239,39 @@ namespace Logic.Managers
             else
             {
                 //continuing the game since no Draw or Victory has been achieved
-                NextStepAction();
+                if (_nextStep)
+                {
+                    NextStepAction();
+                }
             }
         }
 
 
         private void NextStepAction()
         {
+            _nextStep = false;
             switch (GameTurn)
             {
                 case GameTurn.Opponent:
                     _modeController.OpponentAction();
+                    Debug.Log("opponent action");
                     break;
                 case GameTurn.Player:
                     _modeController.PlayerAction();
+                    Debug.Log("player action");
                     break;
             }
         }
         
 
-        private void CheckHintPositions(List<BoardCell> tempList)
+        public void CheckHintPositions(List<BoardCell> tempList, PlayerMark hintAgainst)
         {
             if (_hintPosition.isWinningPos)
             {
                 return;
             }
             
-            if (!tempList.Exists(x => x.CellMarkType == PlayerMark.Noughts) && tempList.FindAll(x => x.CellMarkType == PlayerMark.Crosses).Count == GridSize - 1)
+            if (!tempList.Exists(x => x.CellMarkType == hintAgainst) && tempList.FindAll(x => x.CellMarkType == hintAgainst.NextEnumElement(1)).Count == GridSize - 1)
             {
                 ChoosePotentialWinningPosition(tempList);
             }
@@ -258,18 +284,21 @@ namespace Logic.Managers
 
         private void ChoosePotentialWinningPosition(List<BoardCell> tempList)
         {
-            var winningHintPos = tempList.SingleOrDefault(x => x.CellMarkType == PlayerMark.Unknown);
-            if (winningHintPos != null)
+            if (tempList.Exists(x => x.CellMarkType == PlayerMark.Unknown))
             {
-                _hintPosition.pos = winningHintPos.BoardCellPosition;
-                _hintPosition.isWinningPos = true;
+                var winningHintPos = tempList.FirstOrDefault(x => x.CellMarkType == PlayerMark.Unknown);
+                if (winningHintPos != null)
+                {
+                    _hintPosition.pos = winningHintPos.BoardCellPosition;
+                    _hintPosition.isWinningPos = true;
+                }
             }
         }
         
 
         private void ChooseRandomUnoccupiedPosition()
         {
-            _hintPosition.pos = _currentGameCells.First(x => x.CellMarkType == PlayerMark.Unknown).BoardCellPosition;
+            _hintPosition.pos = CurrentGameCells.First(x => x.CellMarkType == PlayerMark.Unknown).BoardCellPosition;
             _hintPosition.isWinningPos = false;
         }
     }

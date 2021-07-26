@@ -31,7 +31,7 @@ namespace UI.GameScene
                     false, 
                     GameManager.Instance.GameTurn.NextEnumElement(1).ToString());
                 hintButton.interactable = true;
-                undoButton.interactable = true;
+                undoButton.interactable = GameManager.Instance.OpponentType != OpponentType.Computer;
             };
 
             GameManager.Instance.DrawAction += () =>
@@ -39,19 +39,19 @@ namespace UI.GameScene
                 gameFinishedWindow.OpenWindow();
                 gameFinishedWindow.Init(true, "");
                 hintButton.interactable = true;
-                undoButton.interactable = true;
+                undoButton.interactable = GameManager.Instance.OpponentType != OpponentType.Computer;
             };
 
-            ModeController.OpponentActionCompleted += () =>
+            ModeController.OnOpponentAction += () =>
             {
                 hintButton.interactable = false;
                 undoButton.interactable = false;
             };
             
-            ModeController.PlayerActionCompleted += () =>
+            ModeController.OnPlayerAction += () =>
             {
                 hintButton.interactable = true;
-                undoButton.interactable = true;
+                undoButton.interactable = GameManager.Instance.OpponentType != OpponentType.Computer;
             };
 
             SettingsButton();
@@ -70,6 +70,11 @@ namespace UI.GameScene
         public void HintButton()
         {
             GameManager.Instance.HintRequested();
+            if (GameManager.Instance.GameTurn == GameTurn.Opponent)
+            {
+                hintButton.interactable = false;
+                undoButton.interactable = false;
+            }
         }
 
 
