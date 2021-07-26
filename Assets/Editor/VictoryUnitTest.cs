@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Logic;
 using Logic.Managers;
 using NUnit.Framework;
@@ -36,23 +38,32 @@ namespace Editor
             type.GetProperty(nameof(_gameManager.GridSize))?.SetValue(_gameManager, 3);
 
             List<BoardCellPosition> receivedList = null;
+            const int successfulTestCount = 4;
+            var testCounter = 0;
+            var timer = 0.0;
             _gameManager.VictoryAction += (victoriousCells) =>
             {
+                testCounter++;
                 receivedList = victoriousCells;
-                Assert.Pass();
             };
 
             SetHorizontalWin(ref boardCells);
             _gameManager.StartCheckingVictory(new BoardCellPosition(0, 0));
+            SetVerticalWin(ref boardCells);
+            _gameManager.StartCheckingVictory(new BoardCellPosition(0, 0));
+            SetFirstDiagonalWin(ref boardCells);
+            _gameManager.StartCheckingVictory(new BoardCellPosition(0, 0));
+            SetSecondDiagonalWin(ref boardCells);
+            _gameManager.StartCheckingVictory(new BoardCellPosition(0, 0));
 
-            var timer = 0.0;
-            while (receivedList == null)
+            while (receivedList == null || testCounter < successfulTestCount)
             {
                 timer += Time.deltaTime;
                 yield return null;
 
-                if (timer > 1)
+                if (timer > 2)
                 {
+                    Debug.Log(timer + " seconds have passed with no result");
                     Assert.Fail();
                 }
             }
@@ -70,6 +81,48 @@ namespace Editor
             boardCells[6].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[6], PlayerMark.Unknown);
             boardCells[7].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[7], PlayerMark.Noughts);
             boardCells[8].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[8], PlayerMark.Crosses);
+        }
+
+
+        private void SetVerticalWin(ref List<BoardCell> boardCells)
+        {
+            boardCells[0].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[0], PlayerMark.Crosses);
+            boardCells[1].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[1], PlayerMark.Noughts);
+            boardCells[2].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[2], PlayerMark.Unknown);
+            boardCells[3].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[3], PlayerMark.Crosses);
+            boardCells[4].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[4], PlayerMark.Unknown);
+            boardCells[5].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[5], PlayerMark.Unknown);
+            boardCells[6].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[6], PlayerMark.Crosses);
+            boardCells[7].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[7], PlayerMark.Noughts);
+            boardCells[8].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[8], PlayerMark.Noughts);
+        }
+        
+        
+        private void SetFirstDiagonalWin(ref List<BoardCell> boardCells)
+        {
+            boardCells[0].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[0], PlayerMark.Crosses);
+            boardCells[1].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[1], PlayerMark.Noughts);
+            boardCells[2].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[2], PlayerMark.Unknown);
+            boardCells[3].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[3], PlayerMark.Unknown);
+            boardCells[4].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[4], PlayerMark.Crosses);
+            boardCells[5].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[5], PlayerMark.Unknown);
+            boardCells[6].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[6], PlayerMark.Crosses);
+            boardCells[7].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[7], PlayerMark.Noughts);
+            boardCells[8].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[8], PlayerMark.Crosses);
+        }
+        
+        
+        private void SetSecondDiagonalWin(ref List<BoardCell> boardCells)
+        {
+            boardCells[0].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[0], PlayerMark.Unknown);
+            boardCells[1].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[1], PlayerMark.Noughts);
+            boardCells[2].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[2], PlayerMark.Crosses);
+            boardCells[3].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[3], PlayerMark.Unknown);
+            boardCells[4].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[4], PlayerMark.Crosses);
+            boardCells[5].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[5], PlayerMark.Unknown);
+            boardCells[6].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[6], PlayerMark.Crosses);
+            boardCells[7].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[7], PlayerMark.Noughts);
+            boardCells[8].GetType().GetProperty("CellMarkType")?.SetValue(boardCells[8], PlayerMark.Noughts);
         }
     }
 }
