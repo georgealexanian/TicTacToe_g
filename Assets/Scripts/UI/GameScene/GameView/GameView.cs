@@ -33,7 +33,7 @@ namespace UI.GameScene.GameView
             GameManager.Instance.GameStarting();
             GameManager.Instance.VictoryAction += VictoryAction;
             GameManager.Instance.DrawAction += DrawAction;
-            GameManager.Instance.restartGameAction += () =>
+            GameManager.Instance.RestartGameAction += () =>
             {
                 FinishAndRestart();
             };

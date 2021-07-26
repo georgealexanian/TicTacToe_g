@@ -494,6 +494,8 @@ MonoBehaviour:
   settingsWindow: {fileID: 1643949782}
   gameFinishedWindow: {fileID: 1405985348}
   gameView: {fileID: 547105159}
+  hintButton: {fileID: 2065566453}
+  undoButton: {fileID: 677076507}
 --- !u!114 &755636816
 MonoBehaviour:
   m_ObjectHideFlags: 0
