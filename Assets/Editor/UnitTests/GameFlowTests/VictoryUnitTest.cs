@@ -29,7 +29,7 @@ namespace Editor.UnitTests.GameFlowTests
                 var boardCell = holderGo.AddComponent<BoardCell>();
                 boardCell
                     .GetType()
-                    .GetProperty("BoardCellPosition")?
+                    .GetProperty(nameof(boardCell.BoardCellPosition))?
                     .SetValue(boardCell, new BoardCellPosition(i - (i / 3) * 3 + 1, i / 3 + 1));
                 Debug.Log(boardCell.BoardCellPosition.x + "      " + boardCell.BoardCellPosition.y);
             }
@@ -45,7 +45,6 @@ namespace Editor.UnitTests.GameFlowTests
             List<BoardCellPosition> receivedList = null;
             const int successfulTestCount = 4;
             var testCounter = 0;
-            var timer = 0.0;
             _gameManager.VictoryAction += (victoriousCells) =>
             {
                 testCounter++;
@@ -61,11 +60,11 @@ namespace Editor.UnitTests.GameFlowTests
             SetSecondDiagonalWin(ref boardCells);
             _gameManager.StartCheckingVictory(new BoardCellPosition(0, 0));
 
+            var timer = 0.0;
             while (receivedList == null || testCounter < successfulTestCount)
             {
                 timer += Time.deltaTime;
                 yield return null;
-
                 if (timer > 2)
                 {
                     Debug.Log(timer + " seconds have passed with no result");
