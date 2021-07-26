@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Extensions;
-using Logic.GameFlow;
 using Logic.GameFlow.GameModeController;
 using UI.GameScene.GameView;
 using UI.GameScene.Windows.GameFinishedWindow;
 using UI.GameScene.Windows.SettingsWindow;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Logic.Managers
 {
@@ -18,10 +19,18 @@ namespace Logic.Managers
         public PlayerMark PlayerMark { get; private set; } = PlayerMark.Crosses;
         public PlayerMark OpponentMark { get; private set; } = PlayerMark.Noughts;
         public GameTurn GameTurn { get; private set; } = GameTurn.Player;
-        public DifficultyLevel GameDifficulty { get; set; } = DifficultyLevel.Easy;
+        public DifficultyLevel GameDifficulty
+        {
+            get => _gameDifficulty;
+            set
+            {
+                _gameDifficulty = value;
+                DifficultyLevelAction?.Invoke();
+            }
+        }
+
         public DateTime GameStartTime { get; private set; }
         public List<BoardCell> CurrentGameCells { get; private set; } = new List<BoardCell>();
-
 
         public readonly List<BoardCell> CachedCells = new List<BoardCell>();
         public Action<List<BoardCellPosition>> VictoryAction;
@@ -29,12 +38,14 @@ namespace Logic.Managers
         public Action<BoardCellPosition> HintPositionAction;
         public Action<BoardCellPosition> UndoAction;
         public Action RestartGameAction;
+        public Action DifficultyLevelAction;
 
         private readonly Stack<BoardCellPosition> _trackedSteps  = new Stack<BoardCellPosition>();
         private HintPositionInfo _hintPosition = new HintPositionInfo();
         private ModeController _modeController;
         private bool _isWon;
         private bool _nextStep;
+        private DifficultyLevel _gameDifficulty = DifficultyLevel.Easy;
         
         
         public override void Initialize()
@@ -49,6 +60,7 @@ namespace Logic.Managers
         {
             GameStartTime = DateTime.UtcNow;
             CurrentGameCells = CachedCells.Take(GridSize * GridSize).ToList();
+            GameTurn = GameTurn.Player;
             _trackedSteps.Clear();
             _nextStep = false;
         }
@@ -61,8 +73,9 @@ namespace Logic.Managers
         }
 
 
-        public void HintRequested()
+        public void HintRequested(PlayerMark hintAgainst, int upperRandomValue)
         {
+            CheckHintPositions(hintAgainst, upperRandomValue);
             HintPositionAction?.Invoke(_hintPosition.pos);
         }
 
@@ -81,7 +94,7 @@ namespace Logic.Managers
                 ChooseModeController();
                 
             }
-            else if(winName.Equals(nameof(GameFinishedWindow)))
+            else if (winName.Equals(nameof(GameFinishedWindow)))
             {
                 RestartGameAction?.Invoke();
             }
@@ -177,7 +190,7 @@ namespace Logic.Managers
         }
 
 
-        public List<BoardCell> GetDiagonalCells(bool leftToRight)
+        private List<BoardCell> GetDiagonalCells(bool leftToRight)
         {
             if (leftToRight)
             {
@@ -201,7 +214,7 @@ namespace Logic.Managers
         {
             if (tempList.Exists(x => x.CellMarkType == PlayerMark.Unknown))
             {
-                CheckHintPositions(tempList, PlayerMark.Noughts);
+                // CheckHintPositions(tempList, PlayerMark.Noughts, 1);
                 if (_nextStep)
                 {
                     NextStepAction();
@@ -263,22 +276,46 @@ namespace Logic.Managers
                     break;
             }
         }
-        
 
-        public void CheckHintPositions(List<BoardCell> tempList, PlayerMark hintAgainst)
+        
+        private void CheckHintPositions(PlayerMark hintAgainst, int upperRandomValue)
         {
-            if (_hintPosition.isWinningPos)
+            List<BoardCell> tempList;
+            for (var i = 0; i < GridSize; i++)
             {
-                return;
+                var pos = i + 1;
+                tempList = CurrentGameCells.FindAll(cell => cell.BoardCellPosition.x == pos);
+                FindHintPos();
+                tempList = CurrentGameCells.FindAll(cell => cell.BoardCellPosition.y == pos);
+                FindHintPos();
             }
             
-            if (!tempList.Exists(x => x.CellMarkType == hintAgainst) && tempList.FindAll(x => x.CellMarkType == hintAgainst.NextEnumElement(1)).Count == GridSize - 1)
+            tempList = GetDiagonalCells(true);
+            FindHintPos();
+            tempList = GetDiagonalCells(false);
+            FindHintPos();
+
+            void FindHintPos()
             {
-                ChoosePotentialWinningPosition(tempList);
-            }
-            else
-            {
-                ChooseRandomUnoccupiedPosition();
+                if (_hintPosition.isWinningPos)
+                {
+                    return;
+                }
+                if (!tempList.Exists(x => x.CellMarkType == hintAgainst) && tempList.FindAll(x => x.CellMarkType == hintAgainst.NextEnumElement(1)).Count == GridSize - 1)
+                {
+                    if (Random.Range(0, upperRandomValue) == 0)
+                    {
+                        ChoosePotentialWinningPosition(tempList);
+                    }
+                    else
+                    {
+                        ChooseRandomUnoccupiedPosition();
+                    }
+                }
+                else
+                {
+                    ChooseRandomUnoccupiedPosition();
+                }
             }
         }
 

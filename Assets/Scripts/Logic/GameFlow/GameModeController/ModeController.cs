@@ -7,7 +7,7 @@ namespace Logic.GameFlow.GameModeController
     {
         public static Action OnOpponentAction;
         public static Action OnPlayerAction;
-        protected GameManager GameMan;
+        protected readonly GameManager GameMan;
 
 
         protected ModeController(GameManager gameManager)

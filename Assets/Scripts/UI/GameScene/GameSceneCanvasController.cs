@@ -70,7 +70,7 @@ namespace UI.GameScene
 
         public void HintButton()
         {
-            GameManager.Instance.HintRequested();
+            GameManager.Instance.HintRequested(PlayerMark.Noughts, 1);
             if (GameManager.Instance.GameTurn == GameTurn.Opponent)
             {
                 hintButton.interactable = false;

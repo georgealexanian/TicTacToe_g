@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Logic.GameFlow.GameDifficultyController;
 using Logic.Managers;
 using UI.GameScene.GameView;
+using UnityEngine;
 
 namespace Logic.GameFlow.GameModeController
 {
@@ -10,31 +13,48 @@ namespace Logic.GameFlow.GameModeController
         public HumanToComputerModeController(GameManager gameManager) : base(gameManager)
         {
             GameMan.HintPositionAction += HintReceived;
+            GameMan.DifficultyLevelAction += DifficultyLevelAction;
+            ChooseDifficultyController();
         }
         ~HumanToComputerModeController()
         {
             GameMan.HintPositionAction -= HintReceived;
+            GameMan.DifficultyLevelAction -= DifficultyLevelAction;
+        }
+
+
+        private IDifficultyController _difficultyController;
+
+
+        private void DifficultyLevelAction()
+        {
+            ChooseDifficultyController();
         }
         
         
-        public override void OpponentAction()
+        private void ChooseDifficultyController()
+        {
+            switch (GameMan.GameDifficulty)
+            {
+                case DifficultyLevel.Unknown: 
+                case DifficultyLevel.Easy:
+                    _difficultyController = new EasyDifficulty();
+                    break;
+                case DifficultyLevel.Medium:
+                    _difficultyController = new MediumDifficulty();
+                    break;
+                case DifficultyLevel.Hard:
+                    _difficultyController = new HardDifficulty();
+                    break;
+            }
+        }
+        
+        
+        public override async void OpponentAction()
         {
             base.OpponentAction();
-
-            List<BoardCell> tempList;
-            for (var i = 0; i < GameMan.GridSize; i++)
-            {
-                var pos = i + 1;
-                tempList = GameMan.CurrentGameCells.FindAll(cell => cell.BoardCellPosition.x == pos);
-                GameMan.CheckHintPositions(tempList, PlayerMark.Crosses);
-                tempList = GameMan.CurrentGameCells.FindAll(cell => cell.BoardCellPosition.y == pos);
-                GameMan.CheckHintPositions(tempList, PlayerMark.Crosses);
-                tempList = GameMan.GetDiagonalCells(true);
-                GameMan.CheckHintPositions(tempList, PlayerMark.Crosses);
-                tempList = GameMan.GetDiagonalCells(false);
-                GameMan.CheckHintPositions(tempList, PlayerMark.Crosses);
-            } 
-            GameMan.HintRequested();
+            await Task.Delay(100);
+            _difficultyController.RequestHintPosition(PlayerMark.Noughts);
         }
         
         
